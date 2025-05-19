@@ -1,5 +1,10 @@
 export default {
-  generic: {},
+  generic: {
+    project: {
+      name: 'ingresso.go',
+    },
+    or: 'ou',
+  },
   sidebar: {},
   form: {
     required_message: 'Campo obrigatório',
@@ -12,7 +17,18 @@ export default {
     invalid_google_auth: 'Erro ao fazer o login com o Google.',
   },
   routes: {},
-  pages: {},
+  pages: {
+    sign_in: {
+      dont_have_account: 'Não tem uma conta?',
+      sign_up: 'Cadastre-se',
+      email: 'Email',
+      password: 'Senha',
+      actions: {
+        login: 'Entrar',
+        google: 'Continuar com Google',
+      },
+    },
+  },
   accessibility: {
     scan_qrcode: 'Escaneie o QR Code para conectar ao whatsapp',
   },

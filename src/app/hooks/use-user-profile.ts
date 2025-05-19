@@ -1,10 +1,10 @@
+import { queryKeys } from '@/app/constants/query-keys';
+import { storageKeys } from '@/app/constants/storage-keys';
+import { Storage } from '@/app/lib/utils/storage';
+import { withPersistentQuery } from '@/app/lib/utils/with-persistent-query';
+import { UserService } from '@/app/services/user-service';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { queryKeys } from '../constants/query-keys';
-import { storageKeys } from '../constants/storage-keys';
-import { Storage } from '../lib/utils/storage';
-import { withPersistentQuery } from '../lib/utils/with-persistent-query';
-import { UserService } from '../services/user-service';
 
 const EXPIRATION_IN_MS = 24 * 60 * 60 * 1000;
 

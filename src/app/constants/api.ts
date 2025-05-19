@@ -4,4 +4,7 @@ export const API = {
     refreshToken: '/v1/auth/refresh-token',
     exchangeCode: '/v1/auth/code',
   },
+  user: {
+    profile: '/v1/user/profile',
+  },
 };
