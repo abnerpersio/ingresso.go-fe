@@ -1,7 +1,7 @@
 export const ROUTES = {
   auth: {
-    signIn: '/sign-in',
-    signUp: '/sign-up',
+    signIn: '/auth/sign-in',
+    signUp: '/auth/sign-up',
     authCallback: '/auth/callback',
     activateAccount: '/activate-account',
     forgotPassword: '/forgot-password',
