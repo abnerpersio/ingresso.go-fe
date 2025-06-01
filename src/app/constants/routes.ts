@@ -7,6 +7,6 @@ export const ROUTES = {
     forgotPassword: '/forgot-password',
   },
   dashboard: {
-    home: '/home',
+    home: '/',
   },
 };

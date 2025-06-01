@@ -1,4 +1,4 @@
-import type defaultTranslation from '@/locales/ptBR';
+import type defaultTranslation from '@/locales/pt-br';
 import 'i18next';
 
 declare module 'i18next' {

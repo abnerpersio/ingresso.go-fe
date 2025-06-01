@@ -8,6 +8,7 @@ import { AuthGuard } from './guards/auth-guard';
 const SignInPage = lazy(() => import('@/ui/pages/auth/sign-in'));
 const SignUpPage = lazy(() => import('@/ui/pages/auth/sign-up'));
 const AuthCallbackPage = lazy(() => import('@/ui/pages/auth/callback'));
+const HomePage = lazy(() => import('@/ui/pages/dashboard/home'));
 
 export function Router() {
   return (
@@ -19,6 +20,10 @@ export function Router() {
             <Route path={ROUTES.auth.signUp} element={<SignUpPage />} />
             <Route path={ROUTES.auth.authCallback} element={<AuthCallbackPage />} />
           </Route>
+        </Route>
+
+        <Route element={<AuthGuard isPrivate />}>
+          <Route path={ROUTES.dashboard.home} element={<HomePage />} />
         </Route>
       </Routes>
     </Suspense>

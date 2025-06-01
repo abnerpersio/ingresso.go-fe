@@ -12,15 +12,17 @@ type Options = {
   enabled?: boolean;
 };
 
+const queryFn = withPersistentQuery(new UserService().getProfile, {
+  key: storageKeys.userDetails,
+  exp: EXPIRATION_IN_MS,
+});
+
 export function useUserProfile(options?: Options) {
   const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: queryKeys.user.profile,
-    queryFn: withPersistentQuery(new UserService().getProfile, {
-      key: storageKeys.userDetails,
-      exp: EXPIRATION_IN_MS,
-    }),
+    queryFn,
     enabled: options?.enabled,
     staleTime: Number.POSITIVE_INFINITY,
   });
@@ -39,4 +41,13 @@ export function useUserProfile(options?: Options) {
   }, [queryClient]);
 
   return { ...query, remove, resetCache };
+}
+
+export function prefetchUserProfile() {
+  const queryClient = useQueryClient();
+
+  return queryClient.fetchQuery({
+    queryKey: queryKeys.user.profile,
+    queryFn,
+  });
 }

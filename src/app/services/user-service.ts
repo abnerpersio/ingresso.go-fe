@@ -3,9 +3,8 @@ import { httpClient } from './http';
 
 export type UserProfile = {
   id: string;
-  givenName: string;
+  name: string;
   email: string;
-  emailVerified: boolean;
   provider?: 'Google';
 };
 

@@ -3,7 +3,7 @@ import { Env } from '@/app/constants/env';
 import { getOauthCallbackUri } from '@/app/constants/oauth';
 import { ROUTES } from '@/app/constants/routes';
 import { storageKeys } from '@/app/constants/storage-keys';
-import { useUserProfile } from '@/app/hooks/use-user-profile';
+import { prefetchUserProfile, useUserProfile } from '@/app/hooks/use-user-profile';
 import { AuthService } from '@/app/services/auth-service';
 import { httpClient } from '@/app/services/http';
 import type { UserProfile } from '@/app/services/user-service';
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const {
     data: profile,
-    isFetching,
+    isFetching: isFetchingProfile,
     remove: removeUserDetails,
   } = useUserProfile({
     enabled: hasAccessToken,
@@ -63,9 +63,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (code: string) => {
       try {
         const { accessToken, refreshToken } = await new AuthService().exchangeCode(code);
+        if (!accessToken || !refreshToken) throw new Error('Invalid tokens received');
 
         localStorage.setItem(storageKeys.accessToken, accessToken);
         localStorage.setItem(storageKeys.refreshToken, refreshToken);
+
+        const profile = await prefetchUserProfile();
+        if (!profile) throw new Error('Invalid profile');
+
         setHasAccessToken(true);
       } catch {
         toast.error(t('errors.invalid_google_auth'));
@@ -141,9 +146,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider value={value}>
-      <LaunchScreen isLoading={isFetching} />
+      <LaunchScreen isLoading={isFetchingProfile} />
 
-      {!isFetching && children}
+      {!isFetchingProfile && children}
     </AuthContext.Provider>
   );
 }
