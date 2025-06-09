@@ -3,7 +3,7 @@ import { Env } from '@/app/constants/env';
 import { getOauthCallbackUri } from '@/app/constants/oauth';
 import { ROUTES } from '@/app/constants/routes';
 import { storageKeys } from '@/app/constants/storage-keys';
-import { prefetchUserProfile, useUserProfile } from '@/app/hooks/use-user-profile';
+import { usePrefetchUserProfile, useUserProfile } from '@/app/hooks/use-user-profile';
 import { AuthService } from '@/app/services/auth-service';
 import { httpClient } from '@/app/services/http';
 import type { UserProfile } from '@/app/services/user-service';
@@ -12,6 +12,7 @@ import { t } from 'i18next';
 import { createContext, useCallback, useLayoutEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Storage } from '../lib/utils/storage';
 
 type AuthContextValue = {
   signedIn: boolean;
@@ -28,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [hasAccessToken, setHasAccessToken] = useState(() => !!localStorage.getItem(storageKeys.accessToken));
 
   const navigate = useNavigate();
+  const prefetchUserProfile = usePrefetchUserProfile();
 
   const {
     data: profile,
@@ -77,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         navigate(ROUTES.auth.signIn);
       }
     },
-    [navigate],
+    [navigate, prefetchUserProfile],
   );
 
   const signOut = useCallback(() => {
@@ -108,6 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       async (error) => {
         const originalRequest = error.config;
         const refreshToken = localStorage.getItem(storageKeys.refreshToken);
+        const storageProfile = Storage.get<{ data: UserProfile }>(storageKeys.userDetails)?.data;
 
         if (originalRequest.url === API.auth.refreshToken) {
           toast.error('Sessão expirada. Faça login novamente');
@@ -115,14 +118,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return Promise.reject(error);
         }
 
-        if (error.response?.status !== 401 || !refreshToken) {
+        const hasRefreshToken = !!refreshToken && !!storageProfile?.username;
+
+        if (error.response?.status !== 401 || !hasRefreshToken) {
           return Promise.reject(error);
         }
 
-        const { accessToken } = await new AuthService().refreshToken({
-          refreshToken,
-          email: profile?.email!,
-        });
+        const { accessToken } = await new AuthService()
+          .refreshToken({ refreshToken, username: storageProfile.username })
+          .catch(() => {
+            toast.error('Sessão expirada. Faça login novamente');
+            signOut();
+            return Promise.reject(error);
+          });
 
         localStorage.setItem(storageKeys.accessToken, accessToken);
 
@@ -133,7 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       httpClient.interceptors.response.eject(interceptorId);
     };
-  }, [signOut, profile?.email]);
+  }, [signOut]);
 
   const value: AuthContextValue = {
     signedIn: !!profile,

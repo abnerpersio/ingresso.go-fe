@@ -43,11 +43,12 @@ export function useUserProfile(options?: Options) {
   return { ...query, remove, resetCache };
 }
 
-export function prefetchUserProfile() {
+export function usePrefetchUserProfile() {
   const queryClient = useQueryClient();
 
-  return queryClient.fetchQuery({
-    queryKey: queryKeys.user.profile,
-    queryFn,
-  });
+  return () =>
+    queryClient.fetchQuery({
+      queryKey: queryKeys.user.profile,
+      queryFn,
+    });
 }

@@ -1,5 +1,7 @@
 import { API } from '@/app/constants/api';
 import { getOauthCallbackUri } from '@/app/constants/oauth';
+import axios from 'axios';
+import { Env } from '../constants/env';
 import { httpClient } from './http';
 
 type SignInPayload = {
@@ -22,11 +24,9 @@ export class AuthService {
     return result?.data;
   }
 
-  async refreshToken({ email, refreshToken }: { refreshToken: string; email: string }) {
-    const result = await httpClient.post<RefreshTokenResult>(API.auth.refreshToken, {
-      refreshToken,
-      email,
-    });
+  async refreshToken({ username, refreshToken }: { refreshToken: string; username: string }) {
+    const url = Env.apiBaseUrl + API.auth.refreshToken;
+    const result = await axios.post<RefreshTokenResult>(url, { refresh_token: refreshToken, username });
     return result.data;
   }
 

@@ -5,7 +5,7 @@ export const queryKeys = {
   invites: {
     list: (celebrationId: string) => ['invites', celebrationId],
   },
-  waSettings: {
-    status: (userId: string) => ['waSettings', userId],
+  movies: {
+    list: ['movies'],
   },
 };

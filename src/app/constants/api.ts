@@ -7,4 +7,7 @@ export const API = {
   user: {
     profile: '/v1/user/profile',
   },
+  movies: {
+    list: '/v1/movies',
+  },
 };
