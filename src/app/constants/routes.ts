@@ -8,5 +8,7 @@ export const ROUTES = {
   },
   dashboard: {
     home: '/',
+    movieDetails: '/movies/:movieId',
+    buySession: '/sessions/:sessionId/buy',
   },
 };

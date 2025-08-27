@@ -9,5 +9,10 @@ export const API = {
   },
   movies: {
     list: '/v1/movies',
+    details: '/v1/movies/:movieId',
+    sessions: {
+      list: '/v1/movies/:movieId/sessions',
+      details: '/v1/movies/:movieId/sessions/:sessionId',
+    },
   },
 };

@@ -1,3 +1,5 @@
-import generic from './generic.json';
+import generic from './generic';
 
-export default { generic };
+export default {
+  generic,
+} as const;

@@ -1,5 +1,6 @@
 import { LaunchScreen } from '@/ui/components/launch-screen';
 import { AuthLayout } from '@/ui/layouts/auth-layout';
+import BuySessionPage from '@/ui/pages/dashboard/buy-session';
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
@@ -9,6 +10,7 @@ const SignInPage = lazy(() => import('@/ui/pages/auth/sign-in'));
 const SignUpPage = lazy(() => import('@/ui/pages/auth/sign-up'));
 const AuthCallbackPage = lazy(() => import('@/ui/pages/auth/callback'));
 const HomePage = lazy(() => import('@/ui/pages/dashboard/home'));
+const MovieDetailsPage = lazy(() => import('@/ui/pages/dashboard/movie-details'));
 
 export function Router() {
   return (
@@ -23,7 +25,9 @@ export function Router() {
         </Route>
 
         <Route element={<AuthGuard isPrivate />}>
-          <Route path={ROUTES.dashboard.home} element={<HomePage />} />
+          <Route index path={ROUTES.dashboard.home} element={<HomePage />} />
+          <Route path={ROUTES.dashboard.movieDetails} element={<MovieDetailsPage />} />
+          <Route path={ROUTES.dashboard.buySession} element={<BuySessionPage />} />
         </Route>
       </Routes>
     </Suspense>

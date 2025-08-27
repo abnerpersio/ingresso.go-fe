@@ -7,5 +7,6 @@ export const queryKeys = {
   },
   movies: {
     list: ['movies'],
+    sessions: (movieId: string) => ['movies', movieId, 'sessions'],
   },
 };
